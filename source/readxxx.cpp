@@ -16,8 +16,9 @@ void ReadXXX(const std::string& filename, std::vector<double>& points,
     } else if (filename.compare(filename.size()-4,4,".ply")==0) {
         ReadPLY(filename, points, normals, colors);
     } else {
-        fprintf(stderr,"could not recognize file extension\n");
-        exit(1);
+        // fprintf(stderr,"could not recognize file extension\n");
+        // exit(1);
+        throw std::runtime_error("ould not recognize file extension");
     }
     return;
 }
@@ -30,7 +31,8 @@ void WriteXXX(const std::string& filename,
     if (filename.compare(filename.size()-4,4,".ply")==0) {
         WritePLY(filename, points, normals, colors);
     } else {
-        fprintf(stderr,"could not recognize file extension\n");
-        exit(1);
+        // fprintf(stderr,"could not recognize file extension\n");
+        // exit(1);
+        throw std::runtime_error("ould not recognize file extension");
     }
 }
