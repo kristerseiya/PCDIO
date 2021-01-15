@@ -30,5 +30,13 @@ void ReadXYZM(const std::string& filename, std::vector<double>& points,
         fread(buffer, sizeof(float), 3, fp);
         points[i*3+0] = buffer[0]; points[i*3+1] = buffer[1]; points[i*3+2] = buffer[2];
     }
+    colors.resize(width*height*3);
+    unsigned char color_buffer[3];
+    for (size_t i = 0; i < (size_t)width*height; i++) {
+        fread(color_buffer, sizeof(unsigned char), 3, fp);
+        colors[i*3+0] = color_buffer[0] / 255.;
+        colors[i*3+1] = color_buffer[1] / 255.;
+        colors[i*3+2] = color_buffer[2] / 255.;
+    }
     fclose(fp);
 }

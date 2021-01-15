@@ -228,3 +228,58 @@ void ReadPLY(const std::string& filename, std::vector<double>& points,
 
     fclose(fp);
 }
+
+void WritePLY(const std::string& filename,
+              const std::vector<double>& points,
+              const std::vector<double>& normals,
+              const std::vector<double>& colors) {
+
+    FILE* fp = fopen(filename.c_str(), "wb");
+    fprintf(fp, "ply\n");
+    if (is_little_endian()) {
+      fprintf(fp, "format binary_little_endian 1.0\n");
+    } else {
+      fprintf(fp, "format binary_big_endian 1.0\n");
+    }
+    fprintf(fp, "element vertex %lu\n", points.size() / 3);
+    fprintf(fp, "property float x\n");
+    fprintf(fp, "property float y\n");
+    fprintf(fp, "property float z\n");
+    bool normal_exists = false;
+    if (normals.size() == points.size()) {
+      normal_exists = true;
+      fprintf(fp, "property float nx\n");
+      fprintf(fp, "property float ny\n");
+      fprintf(fp, "property float nz\n");
+    }
+    bool color_exists = false;
+    if (colors.size() == points.size()) {
+      color_exists = true;
+      fprintf(fp, "property uchar red\n");
+      fprintf(fp, "property uchar green\n");
+      fprintf(fp, "property uchar blue\n");
+    }
+    fprintf(fp, "end_header\n");
+    float float_buffer[3];
+    unsigned char uchar_buffer[3];
+    for (int i = 0; i < points.size() / 3; i++) {
+      float_buffer[0] = points[3*i+0];
+      float_buffer[1] = points[3*i+1];
+      float_buffer[2] = points[3*i+2];
+      fwrite(float_buffer, sizeof(float), 3, fp);
+      if (normal_exists) {
+        float_buffer[0] = normals[3*i+0];
+        float_buffer[1] = normals[3*i+1];
+        float_buffer[2] = normals[3*i+2];
+        fwrite(float_buffer, sizeof(float), 3, fp);
+      }
+      if (color_exists) {
+        uchar_buffer[0] = colors[3*i+0] * 255;
+        uchar_buffer[1] = colors[3*i+1] * 255;
+        uchar_buffer[2] = colors[3*i+2] * 255;
+        fwrite(uchar_buffer, sizeof(unsigned char), 3, fp);
+      }
+    }
+
+    fclose(fp);
+}

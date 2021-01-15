@@ -21,3 +21,16 @@ void ReadXXX(const std::string& filename, std::vector<double>& points,
     }
     return;
 }
+
+void WriteXXX(const std::string& filename,
+              const std::vector<double>& points,
+              const std::vector<double>& normals,
+              const std::vector<double>& colors) {
+
+    if (filename.compare(filename.size()-4,4,".ply")==0) {
+        WritePLY(filename, points, normals, colors);
+    } else {
+        fprintf(stderr,"could not recognize file extension\n");
+        exit(1);
+    }
+}
